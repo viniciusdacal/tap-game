@@ -3,8 +3,9 @@ export default class DeckOfCards {
     this.hasJokers = hasJokers;
     this.deck = DeckOfCards.createDeck(hasJokers);
     this.piles = piles;
+    this.initialize = initialize;
 
-    initialize(this);
+    this.initialize(this);
 
     this.onNewData = () => {
       if (this.isInitialized) {
@@ -70,6 +71,8 @@ export default class DeckOfCards {
       }),
       {}
     );
+
+    this.initialize(this);
   }
 
   giveTo(pileNames, total) {

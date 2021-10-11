@@ -1,0 +1,30 @@
+.Modal__overlay {
+  background-color: rgba(0, 0, 0, 0.5);
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 1000;
+}
+
+.Modal {
+  position: absolute;
+  width: 680px;
+  max-width: 100%;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background-color: #ffffff;
+  border-radius: 20px;
+  z-index: 1001;
+}
+
+.Modal h1 {
+  padding: 0 30px;
+  margin-bottom: 0;
+}
+
+.Modal__content {
+  padding: 30px;
+}

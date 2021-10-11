@@ -4,23 +4,21 @@ import DeckOfCards from '../DeckOfCards/DeckOfCards';
 
 const getNextCounter = (counter) => (counter >= 13 ? 1 : counter + 1);
 
-/*
-  GAME STATE: STARTED | FINISHED
-*/
-
 export default function useBoard() {
-  const [finished, setFinished] = useState(false);
+  const [whoScore, setWhoScore] = useState(null);
+  const [gameState, setGameState] = useState('stopped');
   const [round, setRound] = useState('player1');
   const [counter, setCounter] = useState(0);
   const [tick, forceUpdate] = useReducer((x) => x + 1, 0);
+
   const deckDataRef = useRef(null);
   const counterRef = useRef(0);
   const tapRef = useRef(0);
   const timeoutRef = useRef(null);
-  const finishedRef = useRef(null);
+  const gameStateRef = useRef(null);
 
   counterRef.current = counter;
-  finishedRef.current = finished;
+  gameStateRef.current = gameState;
 
   const deck =
     deckDataRef.current ||
@@ -41,7 +39,7 @@ export default function useBoard() {
         ];
 
         if (pilesLengths.includes(52)) {
-          setFinished(true);
+          setGameState('finished');
           return;
         }
 
@@ -50,7 +48,7 @@ export default function useBoard() {
           counterRef.current !==
             deckDataRef.current.getLastCardFromPile('stack')?.value
         ) {
-          setFinished(true);
+          setGameState('finished');
           return;
         }
 
@@ -60,9 +58,15 @@ export default function useBoard() {
 
   function tap(player) {
     const stack = deck.piles.stack;
+    if (!stack.length) {
+      return;
+    }
+
     if (counterRef.current === stack[stack.length - 1]?.value) {
+      setWhoScore(player);
       deck.moveTo('stack', player, deck.piles.stack.length);
     } else {
+      setWhoScore(player === 'player1' ? 'computer' : 'player1');
       deck.moveTo(
         'stack',
         player === 'player1' ? 'computer' : 'player1',
@@ -74,9 +78,20 @@ export default function useBoard() {
 
   tapRef.current = tap;
 
+  function start() {
+    deck.reset();
+    setCounter(0);
+    setRound('player1');
+    setGameState('started');
+    setWhoScore(null);
+  }
+
   function nextCard() {
-    if (round !== 'player1' || finishedRef.current) {
+    if (round !== 'player1' || gameStateRef.current !== 'started') {
       return;
+    }
+    if (timeoutRef.current) {
+      window.clearTimeout(timeoutRef.current);
     }
     deck.moveTo('player1', 'stack', 1);
     setCounter(getNextCounter(counterRef.current));
@@ -84,7 +99,7 @@ export default function useBoard() {
   }
 
   useEffect(() => {
-    if (round !== 'computer' || finishedRef.current) {
+    if (round !== 'computer' || gameStateRef.current !== 'started') {
       return;
     }
 
@@ -118,14 +133,16 @@ export default function useBoard() {
   }, [round]);
 
   return {
-    finished,
-    deck,
-    tick,
-    nextCard,
     counter,
-    round,
-    tap,
+    deck,
+    gameState,
     isMatching:
       counter === deckDataRef.current.getLastCardFromPile('stack')?.value,
+    nextCard,
+    round,
+    start,
+    tap,
+    tick,
+    whoScore,
   };
 }
