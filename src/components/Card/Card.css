@@ -1,0 +1,75 @@
+@keyframes floatIn {
+  0% {
+    translate: -100px, 0;
+  }
+  100% {
+    translate: 0, 0;
+  }
+}
+
+.Card {
+  align-items: center;
+  background-color: #f5f5eb;
+  border-radius: 20px;
+  box-shadow: 1px 1px 4px 0px rgb(100 100 100 / 50%);
+  color: #f5f5eb;
+  display: flex;
+  font-size: 15rem;
+  height: 240px;
+  justify-content: center;
+  position: relative;
+  width: 192px;
+  z-index: 1;
+  animation: floatIn 500ms 1;
+}
+
+.Card__inner {
+  border-radius: 30px;
+  height: 201px;
+  position: relative;
+  width: 153px;
+  z-index: 2;
+}
+
+.Card--Hearts .Card__inner,
+.Card--Diamonds .Card__inner {
+  background-color: #ff7675;
+}
+
+.Card--Clubs .Card__inner,
+.Card--Spades .Card__inner {
+  background-color: #222222;
+}
+
+.Card__inner svg {
+  position: relative;
+  z-index: 3;
+
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+
+.Card__back {
+  position: absolute;
+  left: 5px;
+  right: 5px;
+  bottom: 5px;
+  top: 5px;
+  border-radius: 16px;
+
+  background-color: rgb(61, 117, 190);
+  background-image: radial-gradient(midnightblue 9px, transparent 10px),
+    repeating-radial-gradient(
+      midnightblue 0,
+      midnightblue 4px,
+      transparent 5px,
+      transparent 20px,
+      midnightblue 21px,
+      midnightblue 25px,
+      transparent 26px,
+      transparent 50px
+    );
+  background-size: 30px 30px, 90px 90px;
+  background-position: 0 0;
+}
