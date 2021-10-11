@@ -106,6 +106,4 @@ export default class DeckOfCards {
     };
     this.onNewData();
   }
-
-  moveCardsToPile(pileName, total) {}
 }
